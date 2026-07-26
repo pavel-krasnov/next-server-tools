@@ -1,0 +1,27 @@
+{
+	"name": "@examples/next-16",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "nst dev",
+		"build": "next build && nst replace-standalone",
+		"start": "nst start",
+		"lint": "eslint"
+	},
+	"dependencies": {
+		"next": "16.2.10",
+		"@next-server-tools/standalone": "workspace:*",
+		"react": "19.2.4",
+		"react-dom": "19.2.4"
+	},
+	"devDependencies": {
+		"@tailwindcss/postcss": "4.3.3",
+		"@types/node": "20.19.43",
+		"@types/react": "19.2.17",
+		"@types/react-dom": "19.2.3",
+		"eslint": "9.39.5",
+		"eslint-config-next": "16.2.10",
+		"tailwindcss": "4.3.3",
+		"typescript": "5.9.3"
+	}
+}

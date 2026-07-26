@@ -1,0 +1,73 @@
+# @next-server-tools/standalone
+
+> Custom Node.js server for Next.js `output: 'standalone'`. For self-hosted Node (Docker, Kubernetes, VMs): Next handles rendering (SSR/RSC/App Router); this package owns the process and request seam. Peer: `next` >= 15. Engines: Node.js >= 22. CLI: `nst`.
+
+Next.js documents that standalone mode and a custom server cannot be used together. This package owns the standalone `server.js` so you keep a lean deploy image and a portable custom server — not tied to a single cloud platform’s server hooks.
+
+## Critical rules for agents
+
+- Audience: **standalone / self-hosted Node**. Not Edge/CDN/platform server adapters.
+- Division of responsibility: put ops and cross-cutting HTTP concerns in `server/` (middleware, hooks, plugins). Leave **rendering** to Next.
+- Production **requires** `output: 'standalone'` in `next.config`.
+- Never hand-edit `{distDir}/standalone/**/server.js` — run `nst replace-standalone` after `next build`.
+- Optional: `nst replace-standalone --copy-ssl` copies `{dir}/ssl` into the standalone tree for in-process HTTPS after deploy; off by default (TLS often terminated elsewhere).
+- Do not use plain `next start` for production with this package; use `nst start`.
+- Dev and prod share the same `server/` + `server.config.*` layout.
+- Prefer `server/` for request gates, headers, healthz, logging, auth, startup/shutdown, and errors (runs outside Next, before the handler). Next `middleware.ts` / `instrumentation.ts` are optional if a vendor still expects them.
+- This is **not** Express/Koa (no routers / cookie helpers). Prefer Context ports over `.raw`.
+- `cacheHandler` is Next data cache — do not implement it as server middleware.
+
+## Quick setup
+
+```bash
+pnpm add @next-server-tools/standalone
+```
+
+```ts
+// next.config.ts
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  output: "standalone",
+};
+
+export default nextConfig;
+```
+
+```json
+{
+  "scripts": {
+    "dev": "nst dev --turbopack",
+    "build": "next build && nst replace-standalone",
+    "start": "nst start"
+  }
+}
+```
+
+Dev bundler: `nst dev --turbopack` / `--webpack` (mutually exclusive). Not inferred from `next.config` `turbopack` block.
+
+## Extension layout
+
+```text
+server.config.ts
+server/
+  middleware/   # e.g. 10-request-id.ts, 20-healthz.ts
+  hooks/        # e.g. 10-server-start.ts, 20-server-ready.ts
+  plugins/      # e.g. logger.ts
+```
+
+Merge order: `server.config.*` → filesystem `server/middleware|hooks|plugins` → inline `config.middlewares` / `hooks` / `plugins`.  
+Numeric filename prefixes set default `order` when omitted. Plugin `setup()` middleware is appended after filesystem middleware, then sorted by `order`.
+
+APIs: `defineMiddleware`, `defineErrorMiddleware`, `defineHook`, `definePlugin`, `defineConfig`, plus programmatic `startCustomServer`, `replaceStandaloneServer`, `startStandaloneServer`.
+
+Hooks: `server:start`, `server:ready`, `server:shutdown`, `request:start`, `request:finish`, `request:error`, `next:before`, `next:after`, `response:sent`.
+
+## Docs
+
+- [README](./README.md): positioning, install, scripts, extension API, HTTPS, CLI
+- [Technical documentation](./docs/TECHNICAL.md): architecture, responsibility split, standalone pipeline, limitations
+
+## Optional
+
+- [Next.js custom server guide](https://nextjs.org/docs/app/guides/custom-server): official note that standalone and custom servers are not used together

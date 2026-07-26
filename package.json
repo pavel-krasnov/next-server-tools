@@ -1,0 +1,30 @@
+{
+	"name": "next-server-tools",
+	"private": true,
+	"packageManager": "pnpm@11.15.1",
+	"engines": {
+		"node": ">=22"
+	},
+	"scripts": {
+		"build": "pnpm --filter @next-server-tools/standalone build",
+		"release": "semantic-release",
+		"dev:15": "pnpm --filter @examples/next-15 dev",
+		"dev:16": "pnpm --filter @examples/next-16 dev",
+		"build:15": "pnpm --filter @examples/next-15 build",
+		"build:16": "pnpm --filter @examples/next-16 build",
+		"start:15": "pnpm --filter @examples/next-15 start",
+		"start:16": "pnpm --filter @examples/next-16 start",
+		"test": "pnpm --filter @next-server-tools/standalone test",
+		"test:examples": "pnpm --filter @next-server-tools/standalone test:examples",
+		"test:all": "pnpm --filter @next-server-tools/standalone test:all",
+		"check": "biome check .",
+		"check:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"lint": "biome lint ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.5",
+		"@semantic-release/git": "11.0.0",
+		"semantic-release": "25.0.8"
+	}
+}

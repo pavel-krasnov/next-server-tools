@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"target": "ES2024",
+		"lib": ["ES2024"],
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"types": ["node"],
+		"noEmit": true,
+		"rootDir": ".",
+		"strict": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"verbatimModuleSyntax": true,
+		"rewriteRelativeImportExtensions": true
+	},
+	"include": ["tests/**/*.ts", "src/**/*.ts"],
+	"exclude": ["src/standalone-entry.ts", "src/standalone-server.ts"]
+}
