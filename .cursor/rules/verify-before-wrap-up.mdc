@@ -1,0 +1,36 @@
+---
+description: Verify with Biome, TypeScript, and scoped tests before finishing code tasks
+alwaysApply: true
+---
+
+# Verify before wrap-up
+
+After making code or config changes in this repo, before ending the turn as "done", run the checks below that apply. Fix failures before concluding.
+
+Skip only for pure Q&A / no file edits, or when the user explicitly says not to.
+
+## Always
+
+1. `pnpm check` (Biome) from the monorepo root.
+2. `pnpm --filter @next-server-tools/standalone exec tsc -b` (or `pnpm build` if dist output is needed).
+
+## When `packages/standalone/src/**` (or its tests) changed
+
+3. `pnpm test` (unit suite).
+
+## When boot / standalone / CLI / extensions / request path changed
+
+4. `pnpm test:examples`, or at least the affected smoke case (e.g. `next-15 start`).
+
+Typical triggers: `boot-server.ts`, `standalone-entry.ts`, `server.ts`, `replace-standalone.ts`, `start-standalone.ts`, `cli.ts`, `extension/**`, listen/TLS wiring.
+
+## When docs or public API surface changed
+
+5. Skim that `README.md`, `docs/TECHNICAL.md`, and `llms.txt` still match the code (exports, CLI, published `files`, bootstrap path).
+
+## Do not do unless asked
+
+- Git commit / push / PR
+- Release or publish dry-runs
+- Regenerating the lockfile (unless dependencies changed)
+- Updating ROADMAP / review canvases unless ship readiness meaningfully changed

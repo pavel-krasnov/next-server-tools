@@ -1,0 +1,75 @@
+{
+	"name": "@next-server-tools/standalone",
+	"version": "0.0.0",
+	"description": "Self-hosted Next.js standalone server — Next for SSR/RSC; replace generated server.js and extend with middleware, hooks, and plugins",
+	"license": "MIT",
+	"author": "Pavel Krasnov",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/pavel-krasnov/next-server-tools.git",
+		"directory": "packages/standalone"
+	},
+	"homepage": "https://github.com/pavel-krasnov/next-server-tools/tree/main/packages/standalone#readme",
+	"bugs": {
+		"url": "https://github.com/pavel-krasnov/next-server-tools/issues"
+	},
+	"keywords": [
+		"next",
+		"nextjs",
+		"next.js",
+		"standalone",
+		"output-standalone",
+		"custom-server",
+		"server.js",
+		"nodejs",
+		"typescript",
+		"middleware",
+		"plugins",
+		"self-hosting"
+	],
+	"type": "module",
+	"engines": {
+		"node": ">=22"
+	},
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"bin": {
+		"nst": "./bin/nst.js"
+	},
+	"files": [
+		"bin",
+		"dist",
+		"docs",
+		"llms.txt"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"scripts": {
+		"build": "tsc -b && pnpm bundle:standalone",
+		"bundle:standalone": "node ./scripts/bundle-standalone.mjs",
+		"dev": "tsc -b --watch",
+		"test": "node --import tsx --test tests/unit/**/*.test.ts",
+		"test:examples": "node --import tsx --test tests/examples/**/*.test.ts",
+		"test:all": "pnpm test && pnpm test:examples",
+		"prepublishOnly": "pnpm build"
+	},
+	"peerDependencies": {
+		"next": ">=15"
+	},
+	"dependencies": {
+		"esbuild": "0.25.12",
+		"jiti": "2.7.0"
+	},
+	"devDependencies": {
+		"@types/node": "24.13.3",
+		"tsx": "4.21.0",
+		"typescript": "7.0.2"
+	}
+}
