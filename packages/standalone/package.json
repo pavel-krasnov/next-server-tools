@@ -1,6 +1,6 @@
 {
 	"name": "@next-server-tools/standalone",
-	"version": "0.0.0",
+	"version": "0.1.0",
 	"description": "Self-hosted Next.js standalone server — Next for SSR/RSC; replace generated server.js and extend with middleware, hooks, and plugins",
 	"license": "MIT",
 	"author": "Pavel Krasnov",
